@@ -76,9 +76,10 @@ angular
               date = ngModelCtrl.$viewValue;
             }
 
-            $element
-              .data('DateTimePicker')
-              .date(date);
+            var data = $element.data('DateTimePicker');
+            if (data) {
+              data.date(date);
+            }
           }
 
           if (ngModelCtrl) {
