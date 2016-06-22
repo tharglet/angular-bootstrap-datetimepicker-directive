@@ -36,38 +36,49 @@ angular
         link    : function ($scope, $element, $attrs, ngModelCtrl) {
           var passed_in_options = $scope.$eval($attrs.datetimepickerOptions);
           var options = jQuery.extend({}, default_options, passed_in_options);
-          
+
           // Default input to element.
           var input = $element;
 
-          $element
-            .on('dp.change', function (e) {
-              
-              if (ngModelCtrl) {
-                ngModelCtrl.$setViewValue(input.val());
-                ngModelCtrl.$render();
-              }
-            })
-            .datetimepicker(options);
-          
-          // We need to find the controller. The controller will not exist if the,
-          // datepicker has been applied to a parent element of the input.
-          if (!ngModelCtrl) {
-            // Try and find the target.
-            // Start with the datePicker input class in the config.
-            var dpInputOption = $element.data('DateTimePicker').datepickerInput();
-            
-            // Use the supplied class.
-            input = $element.find(dpInputOption);
-            if (input.length === 0) {
-              
-              // Grab the nearest child input.
-              input = $element.find('input');
+          $element.on('dp.change', function (e) {
+            if (ngModelCtrl) {
+              ngModelCtrl.$setViewValue(input.val());
+              ngModelCtrl.$render();
             }
-           
-            // Try and grab the controller here.
-            ngModelCtrl = input.controller('ngModel');
+          });
+
+          $timeout(function() {
+            $element.datetimepicker(options);
+
+            // We need to find the controller. The controller will not exist if the,
+            // datepicker has been applied to a parent element of the input.
+            if (!ngModelCtrl) {
+              // Try and find the target.
+              // Start with the datePicker input class in the config.
+              var dpInputOption = $element.data('DateTimePicker').datepickerInput();
+
+              // Use the supplied class.
+              input = $element.find(dpInputOption);
+              if (input.length === 0) {
+
+                // Grab the nearest child input.
+                input = $element.find('input');
+              }
+
+              // Try and grab the controller here.
+              ngModelCtrl = input.controller('ngModel');
+            }
+          });
+
+          if (ngModelCtrl) {
+            var oldRender = ngModelCtrl.$render;
+            ngModelCtrl.$render = function () {
+              setPickerValue();
+              oldRender();
+            };
           }
+
+          setPickerValue();
 
           function setPickerValue() {
             var date = null;
@@ -81,16 +92,6 @@ angular
               data.date(date);
             }
           }
-
-          if (ngModelCtrl) {
-            var oldRender = ngModelCtrl.$render;
-            ngModelCtrl.$render = function () {
-              setPickerValue();
-              oldRender();
-            };
-          }
-
-          setPickerValue();
         }
       };
     }
