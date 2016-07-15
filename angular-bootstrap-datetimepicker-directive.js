@@ -70,20 +70,22 @@ angular
             }
             
             // Model changes in angular should be reformatted here.
-            ngModelCtrl.$formatters.push(function(value){
-              
-              // Grab the calendar.
-              var data = $element.data('DateTimePicker');
-              if (data) {
-                // Set the calendar date.
-                data.date(value);
+            if (ngModelCtrl) {
+              ngModelCtrl.$formatters.push(function(value){
                 
-                // Now fetch the date, which will be a moment, format and return it for updating the view.  
-                return data.date().format(data.format());
-              }
-              
-              return value;
-            });
+                // Grab the calendar.
+                var data = $element.data('DateTimePicker');
+                if (data) {
+                  // Set the calendar date.
+                  data.date(value);
+                  
+                  // Now fetch the date, which will be a moment, format and return it for updating the view.  
+                  return data.date().format(data.format());
+                }
+                
+                return value;
+              });
+            }
           });
         }
       };
