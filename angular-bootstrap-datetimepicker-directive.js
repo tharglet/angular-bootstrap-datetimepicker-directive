@@ -56,7 +56,7 @@ angular
               // Try and find the target.
               // Start with the datePicker input class in the config.
               var dpInputOption = $element.data('DateTimePicker').datepickerInput();
-
+			  
               // Use the supplied class.
               input = $element.find(dpInputOption);
               if (input.length === 0) {
@@ -78,11 +78,12 @@ angular
                 if (data) {
                   // Set the calendar date.
                   data.date(value);
+				  console.log(data.date());
                   if(value) {
 					// Now fetch the date, which will be a moment, format and return it for updating the view.  
 					return data.date().format(data.format());
 				  } else {
-					  return null;
+					  return data.date();
 				  }
                 }
                 
