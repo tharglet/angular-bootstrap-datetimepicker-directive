@@ -78,9 +78,12 @@ angular
                 if (data) {
                   // Set the calendar date.
                   data.date(value);
-                  
-                  // Now fetch the date, which will be a moment, format and return it for updating the view.  
-                  return data.date().format(data.format());
+                  if(value) {
+					// Now fetch the date, which will be a moment, format and return it for updating the view.  
+					return data.date().format(data.format());
+				  } else {
+					  return null;
+				  }
                 }
                 
                 return value;
